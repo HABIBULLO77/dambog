@@ -1,2 +1,2 @@
 ## This is dambog project backend
-### Dambog is shoe selling company
+### Dambog is shoe selling company!
