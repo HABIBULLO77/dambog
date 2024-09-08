@@ -5,6 +5,7 @@ import ProductService from "../models/Product.service";
 import { ProductInput, ProductInquiry } from "../libs/types/product";
 import { AdminRequest, ExtendedRequest } from "../libs/types/member";
 import { ProductCollection } from "../libs/enums/product.enum";
+import { shapeIntoMongooseObjectId } from "../libs/config";
 
 const productService = new ProductService();
 
@@ -41,7 +42,8 @@ productController.getProduct = async (req: ExtendedRequest, res: Response) => {
     console.log("getProduct");
     const { id } = req.params;
     const memberId = req.member?._id ?? null,
-      result = await productService.getProduct(memberId, id);
+      id1 = shapeIntoMongooseObjectId(memberId),
+      result = await productService.getProduct(id1, id);
 
     res.status(HttpCode.OK).json(result);
   } catch (err) {

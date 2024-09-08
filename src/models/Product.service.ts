@@ -50,10 +50,7 @@ class ProductService {
     return result;
   }
 
-  public async getProduct(
-    memberId: ObjectId | null,
-    id: string
-  ): Promise<Product> {
+  public async getProduct(memberId: ObjectId, id: string): Promise<Product> {
     const productId = shapeIntoMongooseObjectId(id);
 
     // Find the product by its ID and ensure its status is 'PROCESS'
