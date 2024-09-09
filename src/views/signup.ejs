@@ -20,6 +20,14 @@
         border-radius: 50%;
         object-fit: cover;
       }
+
+      /* Custom error message */
+      .error-message {
+        color: #f56565; /* Tailwind red color */
+        font-size: 0.875rem; /* Text-sm */
+        margin-top: 0.25rem; /* Margin above the error */
+        display: none; /* Hidden by default */
+      }
     </style>
   </head>
   <body
@@ -27,6 +35,7 @@
   >
     <!-- Sign-up form container -->
     <form
+      id="signupForm"
       action="/admin/signup"
       method="POST"
       enctype="multipart/form-data"
@@ -49,8 +58,8 @@
         name="full-name"
         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
         placeholder="Enter your full name"
-        required
       />
+      <p id="name-error" class="error-message">Full name is required.</p>
 
       <!-- Email Address input -->
       <label
@@ -65,8 +74,8 @@
         name="email"
         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
         placeholder="Enter your email address"
-        required
       />
+      <p id="email-error" class="error-message">A valid email is required.</p>
 
       <!-- Phone Number input -->
       <label
@@ -81,8 +90,8 @@
         name="phone-number"
         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
         placeholder="Enter your phone number"
-        required
       />
+      <p id="phone-error" class="error-message">Phone number is required.</p>
 
       <!-- User Image Upload Field -->
       <label
@@ -123,8 +132,8 @@
         name="password"
         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
         placeholder="Enter your password"
-        required
       />
+      <p id="password-error" class="error-message">Password is required.</p>
 
       <!-- Password strength meter -->
       <p class="text-green-300 text-sm mb-1 mt-4">Password strength</p>
@@ -266,6 +275,61 @@
         } else {
           preview.style.display = "none";
         }
+      }
+
+      // Custom Form Validation
+      const form = document.getElementById("signupForm");
+
+      form.addEventListener("submit", function (e) {
+        // Clear previous error messages
+        clearErrorMessages();
+
+        let isValid = true;
+
+        // Check if full name is provided
+        const fullNameInput = document.getElementById("full-name");
+        if (!fullNameInput.value.trim()) {
+          showErrorMessage("name-error");
+          isValid = false;
+        }
+
+        // Check if email is valid
+        const emailInput = document.getElementById("email");
+        if (!emailInput.value.trim() || !emailInput.validity.valid) {
+          showErrorMessage("email-error");
+          isValid = false;
+        }
+
+        // Check if phone number is provided
+        const phoneInput = document.getElementById("phone-number");
+        if (!phoneInput.value.trim()) {
+          showErrorMessage("phone-error");
+          isValid = false;
+        }
+
+        // Check if password is provided
+        const passwordInput = document.getElementById("password");
+        if (!passwordInput.value.trim()) {
+          showErrorMessage("password-error");
+          isValid = false;
+        }
+
+        // If form is invalid, prevent submission
+        if (!isValid) {
+          e.preventDefault();
+        }
+      });
+
+      function showErrorMessage(elementId) {
+        const errorElement = document.getElementById(elementId);
+        errorElement.style.display = "block";
+      }
+
+      function clearErrorMessages() {
+        const errorMessages = document.querySelectorAll(".error-message");
+        errorMessages.forEach(function (error) {
+          error.style.display = "none";
+        });
       }
     </script>
   </body>
