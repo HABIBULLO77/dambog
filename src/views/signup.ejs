@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Account</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Strength bar styling */
+      .strength-bar {
+        width: 0;
+        height: 100%;
+        border-radius: 9999px;
+      }
+
+      /* Avatar preview styling */
+      .image-preview {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-green-900 flex items-center justify-center min-h-screen p-4 sm:p-8"
+  >
+    <!-- Sign-up form container -->
+    <form
+      action="/admin/signup"
+      method="POST"
+      enctype="multipart/form-data"
+      class="bg-green-800 rounded-lg p-6 sm:p-8 shadow-lg w-full max-w-xs sm:max-w-md lg:max-w-lg"
+    >
+      <h2 class="text-2xl font-bold text-center text-green-100 mb-6">
+        Create Account
+      </h2>
+
+      <!-- Full Name input -->
+      <label
+        for="full-name"
+        class="block text-green-100 text-sm font-medium mb-1"
+      >
+        Full Name
+      </label>
+      <input
+        type="text"
+        id="full-name"
+        name="full-name"
+        class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+        placeholder="Enter your full name"
+        required
+      />
+
+      <!-- Email Address input -->
+      <label
+        for="email"
+        class="block text-green-100 text-sm font-medium mb-1 mt-4"
+      >
+        Email Address
+      </label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+        placeholder="Enter your email address"
+        required
+      />
+
+      <!-- Phone Number input -->
+      <label
+        for="phone-number"
+        class="block text-green-100 text-sm font-medium mb-1 mt-4"
+      >
+        Phone Number
+      </label>
+      <input
+        type="tel"
+        id="phone-number"
+        name="phone-number"
+        class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+        placeholder="Enter your phone number"
+        required
+      />
+
+      <!-- User Image Upload Field -->
+      <label
+        for="profile-image"
+        class="block text-green-100 text-sm font-medium mb-1 mt-4"
+      >
+        Profile Image
+      </label>
+      <input
+        type="file"
+        id="profile-image"
+        name="profile-image"
+        accept="image/*"
+        class="w-full text-sm text-green-100 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-green-600 file:text-white hover:file:bg-green-500"
+        onchange="previewImage(event)"
+      />
+      <!-- Image preview -->
+      <div class="mt-4 flex justify-center">
+        <img
+          id="image-preview"
+          class="image-preview"
+          src=""
+          alt="Image Preview"
+          style="display: none"
+        />
+      </div>
+
+      <!-- Password input -->
+      <label
+        for="password"
+        class="block text-green-100 text-sm font-medium mb-1 mt-4"
+      >
+        Password
+      </label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+        placeholder="Enter your password"
+        required
+      />
+
+      <!-- Password strength meter -->
+      <p class="text-green-300 text-sm mb-1 mt-4">Password strength</p>
+      <div class="relative w-full h-2 bg-gray-300 rounded-full">
+        <div
+          class="absolute h-2 bg-red-500 strength-bar"
+          id="strength-bar"
+        ></div>
+      </div>
+      <p class="text-sm text-green-100 mt-1" id="strength-text">Very Weak</p>
+
+      <!-- Password requirements -->
+      <ul class="text-green-300 text-sm mb-4 space-y-1" id="password-criteria">
+        <li id="char-length" class="text-red-500">✗ At least 6 characters</li>
+        <li id="uppercase" class="text-red-500">✗ Contains uppercase letter</li>
+        <li id="lowercase" class="text-red-500">✗ Contains lowercase letter</li>
+        <li id="number" class="text-red-500">✗ Contains a number</li>
+        <li id="special-char" class="text-red-500">
+          ✗ Contains special character
+        </li>
+      </ul>
+
+      <!-- Submit button -->
+      <button
+        type="submit"
+        class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+      >
+        Sign Up
+      </button>
+
+      <!-- Login link -->
+      <p class="text-center text-green-200 text-sm mt-4">
+        Already have an account?
+        <a href="#" class="text-green-400 hover:underline">Log in</a>
+      </p>
+    </form>
+
+    <!-- JavaScript for password strength meter and image preview -->
+    <script>
+      // Password Strength Meter Logic
+      const passwordInput = document.getElementById("password");
+      const strengthBar = document.getElementById("strength-bar");
+      const strengthText = document.getElementById("strength-text");
+      const charLengthCriteria = document.getElementById("char-length");
+      const uppercaseCriteria = document.getElementById("uppercase");
+      const lowercaseCriteria = document.getElementById("lowercase");
+      const numberCriteria = document.getElementById("number");
+      const specialCharCriteria = document.getElementById("special-char");
+
+      passwordInput.addEventListener("input", updatePasswordStrength);
+
+      function updatePasswordStrength() {
+        const password = passwordInput.value;
+        let strength = 0;
+
+        // Reset criteria
+        charLengthCriteria.classList.add("text-red-500");
+        charLengthCriteria.classList.remove("text-green-500");
+        uppercaseCriteria.classList.add("text-red-500");
+        uppercaseCriteria.classList.remove("text-green-500");
+        lowercaseCriteria.classList.add("text-red-500");
+        lowercaseCriteria.classList.remove("text-green-500");
+        numberCriteria.classList.add("text-red-500");
+        numberCriteria.classList.remove("text-green-500");
+        specialCharCriteria.classList.add("text-red-500");
+        specialCharCriteria.classList.remove("text-green-500");
+
+        // Check length
+        if (password.length >= 6) {
+          strength++;
+          charLengthCriteria.classList.remove("text-red-500");
+          charLengthCriteria.classList.add("text-green-500");
+        }
+
+        // Check for uppercase letters
+        if (/[A-Z]/.test(password)) {
+          strength++;
+          uppercaseCriteria.classList.remove("text-red-500");
+          uppercaseCriteria.classList.add("text-green-500");
+        }
+
+        // Check for lowercase letters
+        if (/[a-z]/.test(password)) {
+          strength++;
+          lowercaseCriteria.classList.remove("text-red-500");
+          lowercaseCriteria.classList.add("text-green-500");
+        }
+
+        // Check for numbers
+        if (/\d/.test(password)) {
+          strength++;
+          numberCriteria.classList.remove("text-red-500");
+          numberCriteria.classList.add("text-green-500");
+        }
+
+        // Check for special characters
+        if (/[^A-Za-z0-9]/.test(password)) {
+          strength++;
+          specialCharCriteria.classList.remove("text-red-500");
+          specialCharCriteria.classList.add("text-green-500");
+        }
+
+        // Update strength bar
+        const strengthPercentage = (strength / 5) * 100;
+        strengthBar.style.width = strengthPercentage + "%";
+
+        // Update strength text
+        if (strength === 0 || strength === 1) {
+          strengthBar.classList.replace("bg-yellow-500", "bg-red-500");
+          strengthBar.classList.replace("bg-green-500", "bg-red-500");
+          strengthText.textContent = "Very Weak";
+        } else if (strength === 2) {
+          strengthBar.classList.replace("bg-red-500", "bg-yellow-500");
+          strengthText.textContent = "Weak";
+        } else if (strength === 3) {
+          strengthBar.classList.replace("bg-red-500", "bg-yellow-500");
+          strengthText.textContent = "Moderate";
+        } else if (strength === 4) {
+          strengthBar.classList.replace("bg-yellow-500", "bg-green-500");
+          strengthText.textContent = "Strong";
+        } else if (strength === 5) {
+          strengthBar.classList.replace("bg-yellow-500", "bg-green-500");
+          strengthText.textContent = "Very Strong";
+        }
+      }
+
+      // Image Preview Logic
+      function previewImage(event) {
+        const file = event.target.files[0];
+        const preview = document.getElementById("image-preview");
+
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            preview.src = e.target.result;
+            preview.style.display = "block";
+          };
+          reader.readAsDataURL(file);
+        } else {
+          preview.style.display = "none";
+        }
+      }
+    </script>
+  </body>
+</html>
