@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Custom error message */
+      .error-message {
+        color: #f56565; /* Tailwind red color */
+        font-size: 0.875rem; /* Text-sm */
+        margin-top: 0.25rem; /* Margin above the error */
+        display: none; /* Hidden by default */
+      }
+
+      /* Highlight input with error */
+      .input-error {
+        border-color: #f56565 !important; /* Tailwind red color */
+      }
+    </style>
+  </head>
+  <body
+    class="bg-green-900 flex items-center justify-center min-h-screen p-4 sm:p-8"
+  >
+    <!-- Login form container -->
+    <form
+      id="loginForm"
+      action="/admin/login"
+      method="POST"
+      class="bg-green-800 rounded-lg p-6 sm:p-8 shadow-lg w-full max-w-xs sm:max-w-md lg:max-w-lg"
+    >
+      <h2 class="text-2xl font-bold text-center text-green-100 mb-6">Login</h2>
+
+      <!-- Nickname (memberNick) -->
+      <label
+        for="memberNick"
+        class="block text-green-100 text-sm font-medium mb-1"
+      >
+        Nickname
+      </label>
+      <input
+        type="text"
+        id="memberNick"
+        name="memberNick"
+        class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+        placeholder="Enter your nickname"
+      />
+      <p id="memberNick-error" class="error-message">Nickname is required.</p>
+
+      <!-- Password (memberPassword) -->
+      <label
+        for="memberPassword"
+        class="block text-green-100 text-sm font-medium mb-1 mt-4"
+      >
+        Password
+      </label>
+      <input
+        type="password"
+        id="memberPassword"
+        name="memberPassword"
+        class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+        placeholder="Enter your password"
+      />
+      <p id="memberPassword-error" class="error-message">
+        Password is required.
+      </p>
+
+      <!-- Submit button -->
+      <button
+        type="submit"
+        class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 mt-6"
+      >
+        Login
+      </button>
+
+      <!-- Signup link -->
+      <p class="text-center text-green-200 text-sm mt-4">
+        Don't have an account?
+        <a href="#" class="text-green-400 hover:underline">Sign up</a>
+      </p>
+    </form>
+
+    <!-- JavaScript for custom validation -->
+    <script>
+      // Custom Form Validation
+      const form = document.getElementById("loginForm");
+
+      form.addEventListener("submit", function (e) {
+        clearErrorMessages();
+        let isValid = true;
+
+        // Check nickname
+        const memberNickInput = document.getElementById("memberNick");
+        if (!memberNickInput.value.trim()) {
+          showErrorMessage("memberNick-error");
+          memberNickInput.classList.add("input-error");
+          isValid = false;
+        } else {
+          memberNickInput.classList.remove("input-error");
+        }
+
+        // Check password
+        const memberPasswordInput = document.getElementById("memberPassword");
+        if (!memberPasswordInput.value.trim()) {
+          showErrorMessage("memberPassword-error");
+          memberPasswordInput.classList.add("input-error");
+          isValid = false;
+        } else {
+          memberPasswordInput.classList.remove("input-error");
+        }
+
+        // Prevent form submission if validation fails
+        if (!isValid) {
+          e.preventDefault();
+        }
+      });
+
+      function showErrorMessage(elementId) {
+        document.getElementById(elementId).style.display = "block";
+      }
+
+      function clearErrorMessages() {
+        const errorMessages = document.querySelectorAll(".error-message");
+        errorMessages.forEach(function (error) {
+          error.style.display = "none";
+        });
+      }
+    </script>
+  </body>
+</html>

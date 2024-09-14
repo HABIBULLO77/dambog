@@ -13,20 +13,34 @@
         border-radius: 9999px;
       }
 
-      /* Avatar preview styling */
-      .image-preview {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        object-fit: cover;
-      }
-
       /* Custom error message */
       .error-message {
         color: #f56565; /* Tailwind red color */
         font-size: 0.875rem; /* Text-sm */
         margin-top: 0.25rem; /* Margin above the error */
         display: none; /* Hidden by default */
+      }
+
+      /* Highlight input with error */
+      .input-error {
+        border-color: #f56565 !important; /* Tailwind red color */
+      }
+
+      /* Custom image upload message */
+      .upload-message {
+        font-size: 0.875rem; /* Text-sm */
+        margin-top: 0.5rem;
+        color: #fbbf24; /* Tailwind amber color */
+      }
+
+      /* Image preview styling */
+      .image-preview {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-top: 10px;
+        display: none; /* Initially hidden */
       }
     </style>
   </head>
@@ -45,95 +59,123 @@
         Create Account
       </h2>
 
-      <!-- Full Name input -->
+      <!-- Nickname (memberNick) -->
       <label
-        for="full-name"
+        for="memberNick"
         class="block text-green-100 text-sm font-medium mb-1"
       >
-        Full Name
+        Username
       </label>
       <input
         type="text"
-        id="full-name"
-        name="full-name"
+        id="memberNick"
+        name="memberNick"
         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-        placeholder="Enter your full name"
+        placeholder="Enter your username"
       />
-      <p id="name-error" class="error-message">Full name is required.</p>
+      <p id="memberNick-error" class="error-message">Username is required.</p>
 
-      <!-- Email Address input -->
+      <!-- Email Address (memberEmail) -->
       <label
-        for="email"
+        for="memberEmail"
         class="block text-green-100 text-sm font-medium mb-1 mt-4"
       >
         Email Address
       </label>
       <input
         type="email"
-        id="email"
-        name="email"
+        id="memberEmail"
+        name="memberEmail"
         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
         placeholder="Enter your email address"
       />
-      <p id="email-error" class="error-message">A valid email is required.</p>
+      <p id="memberEmail-error" class="error-message">
+        A valid email is required.
+      </p>
 
-      <!-- Phone Number input -->
+      <!-- Phone Number (memberPhone) -->
       <label
-        for="phone-number"
+        for="memberPhone"
         class="block text-green-100 text-sm font-medium mb-1 mt-4"
       >
         Phone Number
       </label>
       <input
         type="tel"
-        id="phone-number"
-        name="phone-number"
+        id="memberPhone"
+        name="memberPhone"
         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
         placeholder="Enter your phone number"
       />
-      <p id="phone-error" class="error-message">Phone number is required.</p>
+      <p id="memberPhone-error" class="error-message">
+        Phone number is required.
+      </p>
 
-      <!-- User Image Upload Field -->
+      <!-- Profile Image -->
       <label
-        for="profile-image"
+        for="memberImage"
         class="block text-green-100 text-sm font-medium mb-1 mt-4"
       >
-        Profile Image
+        Upload Profile Image
       </label>
       <input
         type="file"
-        id="profile-image"
-        name="profile-image"
-        accept="image/*"
+        id="memberImage"
+        name="memberImage"
+        accept=".jpg, .jpeg, .png"
         class="w-full text-sm text-green-100 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-green-600 file:text-white hover:file:bg-green-500"
-        onchange="previewImage(event)"
+        onchange="validateAndPreviewImage(event)"
       />
-      <!-- Image preview -->
+      <p class="upload-message">
+        Please upload an image. Only .jpg, .jpeg, or .png formats allowed!
+      </p>
+      <p id="image-error" class="error-message">
+        Invalid file format! Only .jpg, .jpeg, and .png are allowed.
+      </p>
+
+      <!-- Image Preview -->
       <div class="mt-4 flex justify-center">
         <img
           id="image-preview"
           class="image-preview"
           src=""
           alt="Image Preview"
-          style="display: none"
         />
       </div>
 
-      <!-- Password input -->
+      <!-- Password -->
       <label
-        for="password"
+        for="memberPassword"
         class="block text-green-100 text-sm font-medium mb-1 mt-4"
       >
         Password
       </label>
       <input
         type="password"
-        id="password"
-        name="password"
+        id="memberPassword"
+        name="memberPassword"
         class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
         placeholder="Enter your password"
       />
       <p id="password-error" class="error-message">Password is required.</p>
+
+      <!-- Confirm Password -->
+      <label
+        for="confirmPassword"
+        class="block text-green-100 text-sm font-medium mb-1 mt-4"
+      >
+        Confirm Password
+      </label>
+      <input
+        type="password"
+        id="confirmPassword"
+        name="confirmPassword"
+        class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+        placeholder="Confirm your password"
+      />
+      <p id="confirmPassword-error" class="error-message">
+        Passwords do not match.
+      </p>
 
       <!-- Password strength meter -->
       <p class="text-green-300 text-sm mb-1 mt-4">Password strength</p>
@@ -167,170 +209,10 @@
       <!-- Login link -->
       <p class="text-center text-green-200 text-sm mt-4">
         Already have an account?
-        <a href="#" class="text-green-400 hover:underline">Log in</a>
+        <a href="/admin/login" class="text-green-400 hover:underline">Log in</a>
       </p>
     </form>
 
-    <!-- JavaScript for password strength meter and image preview -->
-    <script>
-      // Password Strength Meter Logic
-      const passwordInput = document.getElementById("password");
-      const strengthBar = document.getElementById("strength-bar");
-      const strengthText = document.getElementById("strength-text");
-      const charLengthCriteria = document.getElementById("char-length");
-      const uppercaseCriteria = document.getElementById("uppercase");
-      const lowercaseCriteria = document.getElementById("lowercase");
-      const numberCriteria = document.getElementById("number");
-      const specialCharCriteria = document.getElementById("special-char");
-
-      passwordInput.addEventListener("input", updatePasswordStrength);
-
-      function updatePasswordStrength() {
-        const password = passwordInput.value;
-        let strength = 0;
-
-        // Reset criteria
-        charLengthCriteria.classList.add("text-red-500");
-        charLengthCriteria.classList.remove("text-green-500");
-        uppercaseCriteria.classList.add("text-red-500");
-        uppercaseCriteria.classList.remove("text-green-500");
-        lowercaseCriteria.classList.add("text-red-500");
-        lowercaseCriteria.classList.remove("text-green-500");
-        numberCriteria.classList.add("text-red-500");
-        numberCriteria.classList.remove("text-green-500");
-        specialCharCriteria.classList.add("text-red-500");
-        specialCharCriteria.classList.remove("text-green-500");
-
-        // Check length
-        if (password.length >= 6) {
-          strength++;
-          charLengthCriteria.classList.remove("text-red-500");
-          charLengthCriteria.classList.add("text-green-500");
-        }
-
-        // Check for uppercase letters
-        if (/[A-Z]/.test(password)) {
-          strength++;
-          uppercaseCriteria.classList.remove("text-red-500");
-          uppercaseCriteria.classList.add("text-green-500");
-        }
-
-        // Check for lowercase letters
-        if (/[a-z]/.test(password)) {
-          strength++;
-          lowercaseCriteria.classList.remove("text-red-500");
-          lowercaseCriteria.classList.add("text-green-500");
-        }
-
-        // Check for numbers
-        if (/\d/.test(password)) {
-          strength++;
-          numberCriteria.classList.remove("text-red-500");
-          numberCriteria.classList.add("text-green-500");
-        }
-
-        // Check for special characters
-        if (/[^A-Za-z0-9]/.test(password)) {
-          strength++;
-          specialCharCriteria.classList.remove("text-red-500");
-          specialCharCriteria.classList.add("text-green-500");
-        }
-
-        // Update strength bar
-        const strengthPercentage = (strength / 5) * 100;
-        strengthBar.style.width = strengthPercentage + "%";
-
-        // Update strength text
-        if (strength === 0 || strength === 1) {
-          strengthBar.classList.replace("bg-yellow-500", "bg-red-500");
-          strengthBar.classList.replace("bg-green-500", "bg-red-500");
-          strengthText.textContent = "Very Weak";
-        } else if (strength === 2) {
-          strengthBar.classList.replace("bg-red-500", "bg-yellow-500");
-          strengthText.textContent = "Weak";
-        } else if (strength === 3) {
-          strengthBar.classList.replace("bg-red-500", "bg-yellow-500");
-          strengthText.textContent = "Moderate";
-        } else if (strength === 4) {
-          strengthBar.classList.replace("bg-yellow-500", "bg-green-500");
-          strengthText.textContent = "Strong";
-        } else if (strength === 5) {
-          strengthBar.classList.replace("bg-yellow-500", "bg-green-500");
-          strengthText.textContent = "Very Strong";
-        }
-      }
-
-      // Image Preview Logic
-      function previewImage(event) {
-        const file = event.target.files[0];
-        const preview = document.getElementById("image-preview");
-
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = function (e) {
-            preview.src = e.target.result;
-            preview.style.display = "block";
-          };
-          reader.readAsDataURL(file);
-        } else {
-          preview.style.display = "none";
-        }
-      }
-
-      // Custom Form Validation
-      const form = document.getElementById("signupForm");
-
-      form.addEventListener("submit", function (e) {
-        // Clear previous error messages
-        clearErrorMessages();
-
-        let isValid = true;
-
-        // Check if full name is provided
-        const fullNameInput = document.getElementById("full-name");
-        if (!fullNameInput.value.trim()) {
-          showErrorMessage("name-error");
-          isValid = false;
-        }
-
-        // Check if email is valid
-        const emailInput = document.getElementById("email");
-        if (!emailInput.value.trim() || !emailInput.validity.valid) {
-          showErrorMessage("email-error");
-          isValid = false;
-        }
-
-        // Check if phone number is provided
-        const phoneInput = document.getElementById("phone-number");
-        if (!phoneInput.value.trim()) {
-          showErrorMessage("phone-error");
-          isValid = false;
-        }
-
-        // Check if password is provided
-        const passwordInput = document.getElementById("password");
-        if (!passwordInput.value.trim()) {
-          showErrorMessage("password-error");
-          isValid = false;
-        }
-
-        // If form is invalid, prevent submission
-        if (!isValid) {
-          e.preventDefault();
-        }
-      });
-
-      function showErrorMessage(elementId) {
-        const errorElement = document.getElementById(elementId);
-        errorElement.style.display = "block";
-      }
-
-      function clearErrorMessages() {
-        const errorMessages = document.querySelectorAll(".error-message");
-        errorMessages.forEach(function (error) {
-          error.style.display = "none";
-        });
-      }
-    </script>
+    <script type="text/javascript" src="/js/signup.js"></script>
   </body>
 </html>

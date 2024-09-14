@@ -21,6 +21,12 @@ const memberSchema = new Schema(
       required: true,
     },
 
+    memberEmail: {
+      type: String,
+      index: { unique: true, sparse: true },
+      required: true,
+    },
+
     memberPhone: {
       type: String,
       index: { unique: true, sparse: true },
