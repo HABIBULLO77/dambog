@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Navbar and Logo Styling */
+      .navbar {
+        background-color: rgba(
+          31,
+          41,
+          55,
+          0.85
+        ); /* Dark background with transparency */
+      }
+
+      .navbar a {
+        color: #e5e7eb; /* Tailwind gray-100 */
+      }
+
+      .navbar a:hover {
+        color: #10b981; /* Tailwind green-500 */
+      }
+
+      /* Centered logo */
+      .logo {
+        width: 150px;
+        height: 150px;
+        object-fit: contain;
+      }
+    </style>
+  </head>
+  <body class="bg-green-900 flex flex-col min-h-screen">
+    <!-- Navbar -->
+    <nav class="navbar py-4 shadow-lg flex justify-between items-center px-8">
+      <div class="text-green-200 text-lg font-bold">
+        <a href="/">Dambog</a>
+      </div>
+      <div class="space-x-4">
+        <a href="/admin" class="text-sm">Home</a>
+        <a href="/admin/signup" class="text-sm">Sign Up</a>
+        <a href="/admin/login" class="text-sm">Login</a>
+      </div>
+    </nav>
+
+    <!-- Centered Logo Section -->
+    <main
+      class="flex-grow flex flex-col justify-center items-center text-center"
+    >
+      <img
+        src="/img/dambogLogo.webp"
+        alt="Brand Logo"
+        class="logo rounded-lg mb-4"
+      />
+      <h1 class="text-4xl font-bold text-green-100 mb-4">
+        Welcome to Admin Dashboard
+      </h1>
+
+      <p class="text-green-200 text-sm">
+        Your one-stop solution for everything. Join us today by signing up or
+        logging in.
+      </p>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-green-800 py-4 text-center text-green-200 text-xs">
+      &copy; 2024 Dambog. All Rights Reserved.
+    </footer>
+  </body>
+</html>

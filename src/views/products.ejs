@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Products</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Navbar Styling */
+      .navbar {
+        background-color: rgba(
+          31,
+          41,
+          55,
+          0.85
+        ); /* Dark background with transparency */
+      }
+
+      .navbar a {
+        color: #e5e7eb; /* Tailwind gray-100 */
+      }
+
+      .navbar a:hover {
+        color: #10b981; /* Tailwind green-500 */
+      }
+
+      /* Table Styling */
+      .table-container {
+        margin-top: 2rem;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: center;
+      }
+
+      th {
+        background-color: #2d3748;
+        color: white;
+      }
+
+      /* Form Styling */
+      .form-section {
+        margin-top: 2rem;
+        background-color: rgba(
+          31,
+          41,
+          55,
+          0.85
+        ); /* Form background similar to navbar */
+        padding: 2rem;
+        border-radius: 0.5rem;
+        display: none; /* Hidden by default */
+      }
+
+      /* Custom Input and Select Styling */
+      input,
+      select,
+      textarea {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.5rem;
+        background-color: #2d3748;
+        color: white;
+      }
+
+      input::placeholder,
+      textarea::placeholder {
+        color: #a0aec0;
+        padding-left: 0.5rem; /* Aligns placeholder to the left */
+      }
+
+      /* Image Upload Buttons */
+      .image-upload {
+        display: inline-block;
+        width: 75px;
+        height: 75px;
+        background-color: #4a5568;
+        border-radius: 50%;
+        margin-right: 10px;
+        position: relative;
+      }
+
+      .image-upload input {
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
+      .image-upload:before {
+        content: "+";
+        font-size: 2rem;
+        color: #e2e8f0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    </style>
+  </head>
+  <body class="bg-green-900 flex flex-col min-h-screen">
+    <!-- Navbar -->
+    <nav class="navbar py-4 shadow-lg flex justify-between items-center px-8">
+      <div class="text-green-200 text-lg font-bold">
+        <a href="/">Brand</a>
+      </div>
+      <div class="space-x-4">
+        <a href="/" class="text-sm">Home</a>
+        <a href="/menu" class="text-sm">Menu</a>
+        <a href="/users" class="text-sm">Users</a>
+        <a href="/logout" class="text-sm">Logout</a>
+      </div>
+    </nav>
+
+    <!-- Table Section -->
+    <section class="table-container px-4 sm:px-8">
+      <h2 class="text-2xl text-green-100 font-bold mb-4 text-center">
+        Restaurant Menu
+      </h2>
+      <div class="overflow-x-auto">
+        <table class="table-auto w-full bg-gray-800 rounded-lg shadow-lg">
+          <thead>
+            <tr>
+              <th class="text-green-100">T/r</th>
+              <th class="text-green-100">Product Name</th>
+              <th class="text-green-100">Product Type</th>
+              <th class="text-green-100">Product Volume</th>
+              <th class="text-green-100">Product Price</th>
+              <th class="text-green-100">Product Left Count</th>
+              <th class="text-green-100">Status</th>
+            </tr>
+          </thead>
+          <tbody class="text-green-200">
+            <tr>
+              <td>1</td>
+              <td>Steak</td>
+              <td>Dish</td>
+              <td>Normal</td>
+              <td>15</td>
+              <td>100</td>
+              <td>
+                <select class="bg-gray-700 text-white rounded-md">
+                  <option>Process</option>
+                  <option>Pause</option>
+                  <option>Delete</option>
+                </select>
+              </td>
+            </tr>
+            <!-- Add more rows as needed -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- New Product Button -->
+      <div class="flex justify-end mt-4 mr-2">
+        <button
+          id="newProductBtn"
+          class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-7 rounded-lg"
+        >
+          New Product
+        </button>
+      </div>
+    </section>
+
+    <!-- Form Section (Hidden by default) -->
+    <section class="form-section mx-4 sm:mx-8 mt-10" id="productFormSection">
+      <h2 class="text-2xl text-green-100 font-bold mb-4 text-center">
+        New Product Detail
+      </h2>
+      <form action="/add-product" method="POST" enctype="multipart/form-data">
+        <!-- Product Name -->
+        <label for="productName" class="block text-green-100 mb-1"
+          >Product Name</label
+        >
+        <input
+          type="text"
+          id="productName"
+          name="productName"
+          placeholder="Enter product name"
+          class="pl-2"
+        />
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          <!-- Product Price and Product Left Count in one row -->
+          <div>
+            <label for="productPrice" class="block text-green-100 mb-1"
+              >Product Price</label
+            >
+            <input
+              type="number"
+              id="productPrice"
+              name="productPrice"
+              placeholder="Enter product price"
+              class="pl-2"
+            />
+          </div>
+          <div>
+            <label for="productCount" class="block text-green-100 mb-1"
+              >Product Left Count</label
+            >
+            <input
+              type="number"
+              id="productCount"
+              name="productCount"
+              placeholder="Enter left counts"
+              class="pl-2"
+            />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          <!-- Product Type and Dish Volume in one row -->
+          <div>
+            <label for="productType" class="block text-green-100 mb-1"
+              >Product Type</label
+            >
+            <select id="productType" name="productType" class="pl-2">
+              <option value="dish">Dish</option>
+              <option value="drink">Drink</option>
+              <option value="dessert">Dessert</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div>
+            <label for="dishVolume" class="block text-green-100 mb-1"
+              >Dish Volume</label
+            >
+            <select id="dishVolume" name="dishVolume" class="pl-2">
+              <option value="normal">Normal</option>
+              <option value="large">Large</option>
+              <option value="small">Small</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Product Description -->
+        <label for="productDesc" class="block text-green-100 mt-4 mb-1"
+          >Product Description</label
+        >
+        <textarea
+          id="productDesc"
+          name="productDesc"
+          rows="4"
+          placeholder="Enter a description"
+          class="pl-2"
+        ></textarea>
+
+        <!-- Product Images -->
+        <label class="block text-green-100 mt-4 mb-1">Product Images</label>
+        <div class="flex">
+          <div class="image-upload">
+            <input
+              type="file"
+              name="productImages[]"
+              accept=".jpg,.jpeg,.png"
+            />
+          </div>
+          <div class="image-upload">
+            <input
+              type="file"
+              name="productImages[]"
+              accept=".jpg,.jpeg,.png"
+            />
+          </div>
+          <div class="image-upload">
+            <input
+              type="file"
+              name="productImages[]"
+              accept=".jpg,.jpeg,.png"
+            />
+          </div>
+          <div class="image-upload">
+            <input
+              type="file"
+              name="productImages[]"
+              accept=".jpg,.jpeg,.png"
+            />
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex justify-between mt-6">
+          <button
+            type="button"
+            id="cancelProductBtn"
+            class="bg-red-600 hover:bg-red-500 text-white py-2 px-4 rounded-lg"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 rounded-lg"
+          >
+            Create
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-green-800 py-4 text-center text-green-200 text-xs mt-10">
+      &copy; 2024 Restaurant Menu. All Rights Reserved.
+    </footer>
+
+    <!-- JavaScript to toggle form visibility -->
+    <script>
+      const newProductBtn = document.getElementById("newProductBtn");
+      const cancelProductBtn = document.getElementById("cancelProductBtn");
+      const productFormSection = document.getElementById("productFormSection");
+
+      // Show the form when "New Product" button is clicked
+      newProductBtn.addEventListener("click", function () {
+        productFormSection.style.display = "block";
+      });
+
+      // Hide the form when "Cancel" button is clicked
+      cancelProductBtn.addEventListener("click", function () {
+        productFormSection.style.display = "none";
+      });
+    </script>
+  </body>
+</html>
