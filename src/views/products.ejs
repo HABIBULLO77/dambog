@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Products</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
       /* Navbar Styling */
       .navbar {
@@ -136,13 +137,18 @@
     <!-- Navbar -->
     <nav class="navbar py-4 shadow-lg flex justify-between items-center px-8">
       <div class="text-green-200 text-lg font-bold">
-        <a href="/admin/products/all">Dambog</a>
+        <a href="/admin/product/all">Dambog</a>
       </div>
       <div class="space-x-4">
-        <a href="/" class="text-sm">Home</a>
-        <a href="/admin/products/all" class="text-sm">Menu</a>
+        <a href="/admin" class="text-sm">Home</a>
+        <a href="/admin/product/all" class="text-sm">Menu</a>
         <a href="/admin/user/all" class="text-sm">Users</a>
-        <a href="/admin/logout" class="text-sm">Logout</a>
+        <a
+          href="/admin/logout"
+          class="text-sm"
+          onclick="return confirm('Do you want to logout?')"
+          >Logout</a
+        >
       </div>
     </nav>
 
@@ -150,7 +156,7 @@
       <!-- Table Section -->
       <section class="table-container px-4 sm:px-8">
         <h2 class="text-2xl text-green-100 font-bold mb-4 text-center">
-          Restaurant Menu
+          All Products
         </h2>
         <div class="overflow-x-auto">
           <table class="table-auto w-full bg-gray-800 rounded-lg shadow-lg">
@@ -165,23 +171,29 @@
                 <th class="text-green-100">Status</th>
               </tr>
             </thead>
+
+            <% products.map(function(value, key) {%>
             <tbody class="text-green-200">
               <tr>
-                <td>1</td>
-                <td>Steak</td>
-                <td>Dish</td>
-                <td>Normal</td>
-                <td>15</td>
-                <td>100</td>
+                <td><%= key + 1 %></td>
+                <td><%= value.productName %></td>
+                <td><%= value.productType %></td>
+                <td><%= value.productSize %></td>
+                <td><%= value.productPrice %></td>
+                <td><%= value.productLeftCount %></td>
                 <td>
-                  <select class="bg-gray-700 text-white rounded-md">
-                    <option>Process</option>
-                    <option>Pause</option>
-                    <option>Delete</option>
+                  <select
+                    class="bg-gray-700 text-white rounded-md new-product-status"
+                    id="<%= value._id %>"
+                  >
+                    <option value="PAUSE" <%= value.productStatus === 'PAUSE' ? 'selected' : '' %>>PAUSE</option>
+                    <option value="PROCESS" <%= value.productStatus === 'PROCESS' ? 'selected' : '' %> >PROCESS</option>
+                    <option value="DELETE" <%= value.productStatus === 'DELETE' ? 'selected' : '' %> >DELETE</option>
                   </select>
                 </td>
               </tr>
             </tbody>
+            <%}) %>
           </table>
         </div>
 
@@ -411,7 +423,7 @@
       </section>
     </main>
     <!-- Footer -->
-    <footer class="bg-green-800 py-4 text-center text-green-200 text-xs">
+    <footer class="bg-green-800 py-4 text-center text-green-200 text-xs mt-4">
       &copy; 2024 Dambog. All Rights Reserved.
     </footer>
 

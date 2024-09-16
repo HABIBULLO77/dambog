@@ -93,3 +93,43 @@ function previewImage(event, previewId, uploadId) {
     upload.classList.remove("image-selected"); // Show the "+" sign again
   }
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Select all elements with the class "new-product-status"
+  const productStatusElements = document.querySelectorAll(
+    ".new-product-status"
+  );
+
+  // Add event listener for the change event to each select element
+  productStatusElements.forEach(function (element) {
+    console.log("Event Listener Attached to:", element.id);
+    element.addEventListener("change", async function (e) {
+      const id = e.target.id; // The product ID from the select's id attribute
+      const productStatus = e.target.value; // Get the new value from the select
+
+      // Debugging: Log to check if values are correct
+      console.log("Product ID:", id);
+      console.log("Product Status:", productStatus);
+
+      try {
+        // Send POST request to update the product status
+        const response = await axios.post(`/admin/product/${id}`, {
+          productStatus: productStatus,
+        });
+
+        const result = response.data;
+
+        if (result.data) {
+          // Blur the select element to remove focus
+          e.target.blur();
+        } else {
+          throw new Error(result.message);
+          alert("Product update failed");
+        }
+      } catch (err) {
+        console.log("Error updating productStatus", err);
+        alert("Product update failed");
+      }
+    });
+  });
+});
