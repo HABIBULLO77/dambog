@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Users List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Navbar Styling */
+      .navbar {
+        background-color: rgba(
+          31,
+          41,
+          55,
+          0.85
+        ); /* Dark background with transparency */
+      }
+
+      .navbar a {
+        color: #e5e7eb; /* Tailwind gray-100 */
+      }
+
+      .navbar a:hover {
+        color: #10b981; /* Tailwind green-500 */
+      }
+
+      /* Table Styling */
+      .table-container {
+        margin-top: 2rem;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: center;
+      }
+
+      th {
+        background-color: #2d3748;
+        color: white;
+      }
+
+      td select {
+        background-color: #2d3748;
+        color: white;
+        border: 1px solid #4a5568;
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 640px) {
+        th,
+        td {
+          padding: 8px;
+        }
+        td select {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-green-900 flex flex-col min-h-screen">
+    <!-- Navbar -->
+    <nav class="navbar py-4 shadow-lg flex justify-between items-center px-8">
+      <div class="text-green-200 text-lg font-bold">
+        <a href="/">Dambog</a>
+      </div>
+      <div class="space-x-4">
+        <a href="/admin" class="text-sm">Home</a>
+        <a href="/admin/product/all" class="text-sm">Products</a>
+        <a href="/admin/user/all" class="text-sm">Users</a>
+        <a href="/admin/logout" class="text-sm">Logout</a>
+      </div>
+    </nav>
+
+    <!-- Users Table Section -->
+    <section class="table-container px-4 sm:px-8">
+      <h2 class="text-2xl text-green-100 font-bold mb-4 text-center">
+        All Users List
+      </h2>
+      <div class="overflow-x-auto">
+        <table class="table-auto w-full bg-gray-800 rounded-lg shadow-lg">
+          <thead>
+            <tr>
+              <th class="text-green-100">No</th>
+              <th class="text-green-100">Name</th>
+              <th class="text-green-100">Email</th>
+              <th class="text-green-100">Phone</th>
+              <th class="text-green-100">Status</th>
+            </tr>
+          </thead>
+
+          <% users.map(function(value, key) {%>
+          <tbody class="text-green-200">
+            <tr>
+                <td><%= key + 1 %></td>
+                <td><%= value._doc.memberNick %></td> <!-- Accessing _doc property -->
+                <td><%= value._doc.memberEmail %></td> <!-- Accessing _doc property -->
+                <td><%= value._doc.memberPhone %></td>
+              <td>
+                <select class="status-dropdown" id="<%= value._doc._id %>">
+                    <option value="ACTIVE" <%= value._doc.memberStatus === 'ACTIVE' ? 'selected' : '' %>>ACTIVE</option>
+                    <option value="BLOCK" <%= value._doc.memberStatus === 'BLOCK' ? 'selected' : '' %>>BLOCK</option>
+                    <option value="DELETE" <%= value._doc.memberStatus === 'DELETE' ? 'selected' : '' %>>DELETE</option>
+                </select>
+              </td>
+            </tr>
+          </tbody>
+          <% }) %>
+        </table>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-green-800 py-4 text-center text-green-200 text-xs mt-10">
+      &copy; 2024 User Management. All Rights Reserved.
+    </footer>
+
+    <!-- JavaScript for interactive features -->
+    <!-- <script>
+      const statusDropdowns = document.querySelectorAll(".status-dropdown");
+
+      statusDropdowns.forEach((dropdown) => {
+        dropdown.addEventListener("change", function (e) {
+          const userId = this.dataset.userId; // Assuming each row has a user ID
+          const status = this.value;
+
+          // Example function to update the user status dynamically
+          updateUserStatus(userId, status);
+        });
+      });
+
+      function updateUserStatus(userId, status) {
+        // Example logic to make an API request to update the user status
+        console.log(`Updating user ${userId} to status ${status}`);
+
+        // You can use fetch or axios to send this to the backend
+        // Example:
+        // fetch(`/api/users/${userId}/status`, {
+        //   method: 'POST',
+        //   headers: { 'Content-Type': 'application/json' },
+        //   body: JSON.stringify({ status: status }),
+        // })
+        // .then(response => response.json())
+        // .then(data => console.log(data))
+        // .catch(error => console.error('Error:', error));
+      }
+    </script> -->
+  </body>
+</html>

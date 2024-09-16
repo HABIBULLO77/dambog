@@ -107,10 +107,6 @@ document.addEventListener("DOMContentLoaded", function () {
       const id = e.target.id; // The product ID from the select's id attribute
       const productStatus = e.target.value; // Get the new value from the select
 
-      // Debugging: Log to check if values are correct
-      console.log("Product ID:", id);
-      console.log("Product Status:", productStatus);
-
       try {
         // Send POST request to update the product status
         const response = await axios.post(`/admin/product/${id}`, {
