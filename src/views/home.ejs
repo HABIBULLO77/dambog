@@ -38,11 +38,25 @@
       <div class="text-green-200 text-lg font-bold">
         <a href="/">Dambog</a>
       </div>
+      <% if(!member) { %>
       <div class="space-x-4">
         <a href="/admin" class="text-sm">Home</a>
         <a href="/admin/signup" class="text-sm">Sign Up</a>
         <a href="/admin/login" class="text-sm">Login</a>
       </div>
+      <% } else { %>
+      <div class="space-x-4">
+        <a href="/admin" class="text-sm">Home</a>
+        <a href="/admin/product/all" class="text-sm">Products</a>
+        <a href="/admin/user/all" class="text-sm">Users</a>
+        <a
+          href="/admin/logout"
+          class="text-sm"
+          onclick="return confirm('Do you want to logout?')"
+          >Logout</a
+        >
+      </div>
+      <% } %>
     </nav>
 
     <!-- Centered Logo Section -->

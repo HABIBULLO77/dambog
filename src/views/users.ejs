@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Users List</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
       /* Navbar Styling */
       .navbar {
@@ -76,10 +77,11 @@
         <a href="/admin" class="text-sm">Home</a>
         <a href="/admin/product/all" class="text-sm">Products</a>
         <a href="/admin/user/all" class="text-sm">Users</a>
-        <a href="/admin/logout" class="text-sm">Logout</a>
+        <a href="/admin/logout" class="text-sm" onclick="return confirm('Do you want to logout?')">Logout</a>
       </div>
     </nav>
 
+    <main class="flex-grow">
     <!-- Users Table Section -->
     <section class="table-container px-4 sm:px-8">
       <h2 class="text-2xl text-green-100 font-bold mb-4 text-center">
@@ -105,7 +107,7 @@
                 <td><%= value._doc.memberEmail %></td> <!-- Accessing _doc property -->
                 <td><%= value._doc.memberPhone %></td>
               <td>
-                <select class="status-dropdown" id="<%= value._doc._id %>">
+                <select class="member-status" id="<%= value._doc._id %>">
                     <option value="ACTIVE" <%= value._doc.memberStatus === 'ACTIVE' ? 'selected' : '' %>>ACTIVE</option>
                     <option value="BLOCK" <%= value._doc.memberStatus === 'BLOCK' ? 'selected' : '' %>>BLOCK</option>
                     <option value="DELETE" <%= value._doc.memberStatus === 'DELETE' ? 'selected' : '' %>>DELETE</option>
@@ -117,12 +119,14 @@
         </table>
       </div>
     </section>
+</main>
 
     <!-- Footer -->
-    <footer class="bg-green-800 py-4 text-center text-green-200 text-xs mt-10">
+    <footer class="bg-green-800 py-4 text-center text-green-200 text-xs mt-4">
       &copy; 2024 User Management. All Rights Reserved.
     </footer>
 
+    <script type="text/javascript" src="/js/users.js"></script>
     <!-- JavaScript for interactive features -->
     <!-- <script>
       const statusDropdowns = document.querySelectorAll(".status-dropdown");
