@@ -152,6 +152,22 @@ form.addEventListener("submit", function (e) {
   // Check if passwords match
   const passwordInput = document.getElementById("memberPassword");
   const confirmPasswordInput = document.getElementById("confirmPassword");
+  if (!passwordInput.value.trim()) {
+    showErrorMessage("password-error");
+    passwordInput.classList.add("input-error");
+    isValid = false;
+  } else {
+    passwordInput.classList.remove("input-error");
+  }
+
+  if (!confirmPasswordInput.value.trim()) {
+    showErrorMessage("confirmPassword-error1");
+    confirmPasswordInput.classList.add("input-error");
+    isValid = false;
+  } else {
+    confirmPasswordInput.classList.remove("input-error");
+  }
+
   if (passwordInput.value !== confirmPasswordInput.value) {
     showErrorMessage("confirmPassword-error");
     confirmPasswordInput.classList.add("input-error");
