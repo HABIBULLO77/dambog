@@ -4,7 +4,7 @@ import { T } from "../libs/types/common";
 import ProductService from "../models/Product.service";
 import { ProductInput, ProductInquiry } from "../libs/types/product";
 import { AdminRequest, ExtendedRequest } from "../libs/types/member";
-import { ProductCollection } from "../libs/enums/product.enum";
+import { ProductCollection, ProductType } from "../libs/enums/product.enum";
 import { shapeIntoMongooseObjectId } from "../libs/config";
 
 const productService = new ProductService();
@@ -15,14 +15,14 @@ const productController: T = {};
 productController.getProducts = async (req: Request, res: Response) => {
   try {
     console.log("getProducts");
-    const { page, limit, order, productCollection, search } = req.query;
+    const { page, limit, order, productType, search } = req.query;
     const inquiry: ProductInquiry = {
       order: String(order),
       page: Number(page),
       limit: Number(limit),
     };
-    if (productCollection) {
-      inquiry.productCollection = productCollection as ProductCollection;
+    if (productType) {
+      inquiry.productType = productType as ProductType;
     }
 
     if (search) inquiry.search = String(search);
