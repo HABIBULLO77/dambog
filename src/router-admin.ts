@@ -16,6 +16,9 @@ routerAdmin
     makeUploader("members").single("memberImage"),
     restaurantController.processSignup
   );
+routerAdmin.post("/verify-code", restaurantController.verifyEmailCode);
+routerAdmin.post("/resend-code", restaurantController.resendCode);
+routerAdmin.post("/send-code", restaurantController.sendVerificationCode);
 
 routerAdmin.get("/logout", restaurantController.logout);
 routerAdmin.get("/check-me", restaurantController.checkAuthSession);

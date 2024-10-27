@@ -51,6 +51,19 @@ const memberSchema = new Schema(
       type: String,
     },
 
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+
+    verificationCode: {
+      type: String,
+    },
+
+    codeExpiry: {
+      type: Date,
+    },
+
     memberPoints: {
       type: Number,
       default: 0,

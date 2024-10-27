@@ -203,3 +203,61 @@ function validateEmail(email) {
   const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   return re.test(String(email).toLowerCase());
 }
+
+// Function to send or resend the verification code
+async function sendVerificationCode() {
+  const email = document.getElementById("memberEmail").value;
+  const sendCodeButton = document.getElementById("sendCodeButton");
+
+  if (!email) {
+    alert("Please enter a valid email address.");
+    return;
+  }
+
+  try {
+    const response = await axios.post("/admin/send-code", { email });
+
+    if (response.status === 200) {
+      alert("A verification code has been sent to your email.");
+      sendCodeButton.textContent = "Resend Verification Code"; // Change button text
+    } else {
+      alert(response.data.message || "Failed to send verification code.");
+    }
+  } catch (error) {
+    console.error("Error sending verification code:", error);
+    alert("An error occurred while sending the verification code.");
+  }
+}
+
+// Function to verify the email verification code
+async function verifyEmailCode() {
+  const email = document.getElementById("memberEmail").value;
+  const verificationCode = document.getElementById("verificationCode").value;
+  const verificationCodeError = document.getElementById(
+    "verificationCode-error"
+  );
+
+  if (verificationCode.length !== 6 || isNaN(verificationCode)) {
+    verificationCodeError.style.display = "block";
+    return;
+  } else {
+    verificationCodeError.style.display = "none";
+  }
+
+  try {
+    const response = await axios.post("/admin/verify-code", {
+      email,
+      verificationCode,
+    });
+
+    if (response.status === 200) {
+      alert("Code verified successfully.");
+      document.getElementById("signUpButton").disabled = false; // Enable Sign Up button
+    } else {
+      alert(response.data.message || "Invalid or expired verification code.");
+    }
+  } catch (error) {
+    console.error("Error verifying code:", error);
+    alert("An error occurred while verifying the code.");
+  }
+}

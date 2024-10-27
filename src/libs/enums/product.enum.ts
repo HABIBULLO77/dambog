@@ -1,5 +1,5 @@
 export enum ProductSize {
-  ALL_SIZE = "ALL SIZE",
+  ALL_SIZE = "ALL",
   S220 = 220,
   S230 = 230,
   M240 = 240,

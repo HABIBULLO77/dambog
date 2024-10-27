@@ -51,8 +51,12 @@ restaurantController.processSignup = async (
     const newMember: MemberInput = req.body;
     newMember.memberImage = file?.path.replace(/\\/g, "/");
     newMember.memberType = MemberType.RESTAURANT;
+    
+
+    
 
     const result = await memberService.processSignup(newMember);
+    
 
     req.session.member = result;
     req.session.save(function () {
@@ -65,6 +69,79 @@ restaurantController.processSignup = async (
     res.send(
       `<script> alert("${message}"); window.location.replace("/admin/signup")</script>`
     );
+  }
+};
+
+restaurantController.sendVerificationCode = async (
+  req: AdminRequest,
+  res: Response
+) => {
+  const { email } = req.body;
+  console.log("Email:", email);
+
+  try {
+    const verificationCode = Math.floor(
+      100000 + Math.random() * 900000
+    ).toString();
+    req.session.verificationCode = verificationCode;
+    req.session.verificationEmail = email;
+    req.session.verificationExpires = Date.now() + 10 * 60 * 1000;
+    await memberService.sendVerificationCodeEmail(email, verificationCode);
+    res.status(200).json({ message: "Verification code sent successfully." });
+  } catch (error) {
+    console.error("Error sending verification code:", error);
+    res.status(500).json({ message: "Failed to send verification code." });
+  }
+};
+
+restaurantController.verifyEmailCode = async (
+  req: AdminRequest,
+  res: Response
+) => {
+  //const { memberEmail, verificationCode } = req.body;
+  const { verificationCode, verificationExpires } = req.session;
+  const userCode = req.body.verificationCode;
+  console.log("userCode", userCode)
+  const nowDate = Date.now();
+  if (!verificationCode || nowDate > (verificationExpires ?? 0)) {
+    // Code is missing or expired
+    req.session.verificationCode = null; // Clear expired code
+    req.session.verificationExpires = null;
+    return false;
+  }
+
+  try {
+    const isValid = verificationCode === userCode;
+
+    if (isValid) {
+      req.session.verificationCode = null;
+      req.session.verificationExpires = null;
+      res.status(200).json({ message: "Email verified successfully!" });
+    } else {
+      res
+        .status(400)
+        .json({ message: "Invalid or expired verification code." });
+    }
+  } catch (error) {
+    console.error("Error verifying code:", error);
+    res.status(500).json({ message: "Verification failed. Please try again." });
+  }
+};
+
+restaurantController.resendCode = async (req: AdminRequest, res: Response) => {
+  const { email } = req.body;
+
+  try {
+    const newCode = Math.floor(100000 + Math.random() * 900000).toString();
+    await memberService.storeVerificationCode(email, newCode);
+    await memberService.sendVerificationCodeEmail(email, newCode);
+
+    res.status(200).json({
+      message: "A new verification code has been sent to your email.",
+    });
+  } catch (error) {
+    console.error("Error resending code:", error);
+    res.status(500).json({ message: "Failed to resend verification code." });
   }
 };
 

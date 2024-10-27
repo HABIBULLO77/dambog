@@ -10,7 +10,12 @@ import { MemberStatus, MemberType } from "../libs/enums/member.enum";
 import * as bcrypt from "bcryptjs";
 import { HydratedDocument } from "mongoose";
 import { shapeIntoMongooseObjectId } from "../libs/config";
+import nodemailer from "nodemailer";
+import sgMail from "@sendgrid/mail";
+import axios from "axios";
+import { MailtrapTransport } from "mailtrap";
 
+sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
 class MemberService {
   private readonly memberModel;
   constructor() {
@@ -114,10 +119,12 @@ class MemberService {
     if (!result.length)
       throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
 
-    return result.map((member) => ({
-      ...member,
-      _id: member._id.toString(), // Convert ObjectId to string
-    })) as Member[];
+    return result as unknown as Member[];
+    // return result.map((member) => ({
+    //   ...member,
+    //   _id: member._id.toString(), // Convert ObjectId to string
+
+    // })) as Member[];
   }
 
   public async addUserPoint(member: Member, point: number): Promise<Member> {
@@ -168,6 +175,32 @@ class MemberService {
     }
   }
 
+  public async verifyCode(email: string, code: string): Promise<boolean> {
+    const user = await this.memberModel.findOne({ email }).exec();
+
+    if (!user || user.verificationCode !== code) {
+      return false; // Invalid code
+    }
+
+    // Check if codeExpiry exists and is not expired
+    if (!user.codeExpiry || Date.now() > user.codeExpiry.getTime()) {
+      // Clear the verification code and expiry in the database
+      await this.memberModel.updateOne(
+        { email },
+        { $unset: { verificationCode: "", codeExpiry: "" } }
+      );
+      return false; // Code expired
+    }
+
+    // If code is valid, mark the user as verified
+    await this.memberModel.updateOne(
+      { email },
+      { isVerified: true, $unset: { verificationCode: "", codeExpiry: "" } }
+    );
+
+    return true;
+  }
+
   public async processLogin(input: LoginInput): Promise<Member> {
     const member = await this.memberModel
       .findOne(
@@ -211,6 +244,48 @@ class MemberService {
       ...result,
       _id: result._id.toString(), // Convert ObjectId to string
     } as Member;
+  }
+
+  // Helper function to send the verification code email
+  public async sendVerificationCodeEmail(email: string, code: string) {
+    console.log("Recipient Email:", email);
+
+    const TOKEN = "c2ac73cdc1d9ddf762e3ef4a9178ac41";
+    const transport = nodemailer.createTransport(
+      MailtrapTransport({
+        token: TOKEN,
+      })
+    );
+
+    const sender = {
+      address: "hello@demomailtrap.com",
+      name: "Mailtrap Test",
+    };
+    const recipients = ["h.hamidov77777@gmail.com"];
+
+    try {
+      const result = transport.sendMail({
+        from: sender,
+        to: recipients,
+        subject: "Your Verification Code",
+        html: `<p>Please use the following code to verify your email:</p>
+             <h2>${code}</h2>
+             <p>This code will expire in 10 minutes.</p>`,
+      });
+      console.log("Verification email sent:", result);
+      return result;
+    } catch (error) {
+      console.error("Error sending verification email:", error);
+      throw new Error("Failed to send verification email.");
+    }
+  }
+
+  public async storeVerificationCode(email: string, code: string) {
+    const expiry = Date.now() + 10 * 60 * 1000; // 10 minutes from now
+    await this.memberModel.updateOne(
+      { email },
+      { verificationCode: code, codeExpiry: expiry }
+    );
   }
 }
 

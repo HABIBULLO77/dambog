@@ -30,6 +30,9 @@ export interface MemberInput {
   memberDesc?: string;
   memberImage?: string;
   memberPoints?: number;
+  isVerified?: boolean;
+  verificationCode?: string;
+  codeExpiry?: Date | number;
 }
 
 export interface LoginInput {
@@ -57,7 +60,11 @@ export interface ExtendedRequest extends Request {
 
 export interface AdminRequest extends Request {
   member: Member;
-  session: Session & { member: Member };
+  session: Session & { member: Member } & {
+    verificationCode: string | null;
+    verificationEmail: string | null;
+    verificationExpires: number | null;
+  };
   file: Express.Multer.File;
   files: Express.Multer.File[];
 }
